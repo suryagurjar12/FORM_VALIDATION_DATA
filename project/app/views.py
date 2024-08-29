@@ -1,23 +1,22 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 from .forms import RegistrationForm,LoginForm,QueryForm
 from .models import StudentModel,StudentQuery
 # Create your views here.
 
 def home(request):
     form=RegistrationForm()
-    # return render(request,"home.html",{"form":form})
-    if request.method=="POST":
-        # form=Ragistration(request.POST)
+    if request.method=="POST":      
         form=RegistrationForm(request.POST)
-        
+    
         if form.is_valid():
             stu_name=form.cleaned_data["stu_name"]
             stu_email=form.cleaned_data["stu_email"]
             stu_city=form.cleaned_data["stu_city"]
             stu_mobile=form.cleaned_data["stu_mobile"]
-            stu_password=form.cleaned_data['stu_password']
-            print(stu_name,stu_email,stu_mobile,stu_password)
-            user = StudentModel.objects.filter(email=stu_email)
+            stu_password=form.cleaned_data["stu_password"]
+            print(stu_name,stu_email,stu_city,stu_mobile)
+            user = StudentModel.objects.filter(stu_email=stu_email)
             if user:
                 msg = "Email already exit"
                 form = RegistrationForm()
@@ -27,9 +26,10 @@ def home(request):
                 msg="Registration succesfull"
                 form=RegistrationForm()
                 return render(request,"home.html",{"form":form,"msg":msg})
-        #         data={"fname":fname,"lname":lname,"email":email,"contact":contact}
-        # RegistrationForm.object.create()
-        # form.save()
+            
+    else:
+        return render(request,'home.html',{"form":form})
+
 def login(request):
     form = LoginForm()
     if request.method=="POST":
@@ -102,5 +102,5 @@ def query(request):
                                 'stu_email': email
                             } 
                 form1=QueryForm(initial=initial_data)
-                
-                return render(request,'dashboard.html',{'data':data,'query':form1})
+                data1=StudentQuery.objects.filter(stu_email=email)
+                return render(request,'dashboard.html',{'data':data,'query':form1,'data1':data1})
