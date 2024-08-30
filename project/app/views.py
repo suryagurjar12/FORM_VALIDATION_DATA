@@ -104,3 +104,34 @@ def query(request):
                 form1=QueryForm(initial=initial_data)
                 data1=StudentQuery.objects.filter(stu_email=email)
                 return render(request,'dashboard.html',{'data':data,'query':form1,'data1':data1})
+def delete(request,pk):
+    form=QueryForm()
+    if request.method=="POST":
+        user=StudentQuery.objects.get(id=pk)
+        name =  user.stu_name
+        email = user.stu_email
+        user.delete()
+        initial_data = {
+            'stu-name':name,
+            'stu_email':email,
+        }
+        data1=StudentQuery.objects.filter(stu_email=email)
+        form1=QueryForm(initial=initial_data)
+        user = StudentModel.objects.get(stu_email=email)
+        name = user.stu_name
+        email = user.stu_email
+        contact = user.stu_mobile
+        city = user.stu_city
+        password = user.stu_password
+        data = {
+                    'name':name,
+                    'email':email,
+                    'contact':contact,
+                    'city':city,
+                    'password':password
+                }
+        return render(request,'dashboard.html',{'data':data,'query':form1,'data1':data1})
+        
+        
+        
+        
