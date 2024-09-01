@@ -140,6 +140,7 @@ def update(request,pk):
         name =  user.stu_name
         email = user.stu_email
         query= user.stu_query
+        id=pk
         user.delete()
         initial_data = {
             'stu_name':name,
@@ -163,4 +164,5 @@ def update(request,pk):
                 }
         return render(request,'dashboard.html',{'data':data,'form1':form1,'data1':data1})  
         
-        
+def edit(request,pk):
+    print(pk)        
